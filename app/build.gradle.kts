@@ -85,4 +85,5 @@ dependencies {
     ksp(libs.androidx.lifecycle.compiler)
     implementation(libs.logging.interceptor)
     implementation (libs.retromock)
+    implementation(libs.ktor.server.core)
 }
