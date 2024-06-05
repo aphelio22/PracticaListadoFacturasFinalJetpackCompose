@@ -49,7 +49,6 @@ class InvoiceActivityViewModel @Inject constructor(private val appRepository: Ap
     private var selectedApiType = ApiType.RETROMOCK
 
     init {
-        setSelectedApiType(ApiType.RETROFIT)
         fetchInvoices()
         fetchRemoteConfig()
     }

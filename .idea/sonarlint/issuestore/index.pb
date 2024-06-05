@@ -63,3 +63,5 @@ lapp/src/main/java/com/example/practicalistadofacturasfinaljetpackcompose/ui/vie
 papp/src/main/java/com/example/practicalistadofacturasfinaljetpackcompose/ui/viewmodel/EnergyActivityViewModel.kt,2\e\2e2b3c7cff67e2bac7744f24c479b36bc8b6dea0
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+O
+app/InvoiceActivityViewModel.kt,a\d\adb48c9d5f9e4e502e26e2dbcacd20385325150a

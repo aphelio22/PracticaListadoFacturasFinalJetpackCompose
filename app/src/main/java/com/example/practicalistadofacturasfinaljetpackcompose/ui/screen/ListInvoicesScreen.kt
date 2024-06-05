@@ -1,13 +1,21 @@
 package com.example.practicalistadofacturasfinaljetpackcompose.ui.screen
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,14 +28,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.practicalistadofacturasfinaljetpackcompose.R
+import com.example.practicalistadofacturasfinaljetpackcompose.enums.ApiType
 import com.example.practicalistadofacturasfinaljetpackcompose.ui.viewmodel.InvoiceActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +88,7 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
                         top.linkTo(tvInvoiceTitle.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                        bottom.linkTo(switchRetromock.top)
+                        bottom.linkTo(toggleRetroKtor.top)
                         height = Dimension.fillToConstraints
                     }
             ) {
@@ -85,8 +96,8 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
                     // Render each item
                     InvoiceItem(
                         selectionText = item.fecha,
-                        amount = item.importeOrdenacion.toString(),
-                        stateText = item.descEstado
+                       amount = item.importeOrdenacion.toString(),
+                       stateText = item.descEstado
                     )
                 }
             }
@@ -107,37 +118,22 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
                     .visible(false) // Adjust visibility as needed
             )
 
-            Switch(
-                checked = false, // Bind this to a state variable
-                onCheckedChange = { /* Handle switch change */ },
-                modifier = Modifier
-                    .constrainAs(switchRetromock) {
-                        top.linkTo(rvInvoices.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                    .padding(8.dp)
-                    .visible(false) // Adjust visibility as needed
-            )
-
-            Column(
+            Row(
                 modifier = Modifier
                     .constrainAs(toggleRetroKtor) {
-                        top.linkTo(rvInvoices.bottom)
                         bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
             ) {
-                TextButton(onClick = { /* Handle Retromock click */ }) {
-                    Text("Retromock", fontSize = 10.sp)
+                TextButton(onClick = { viewModel.setSelectedApiType(ApiType.RETROMOCK) }) {
+                    Text("Retromock", fontSize = 18.sp)
                 }
-                TextButton(onClick = { /* Handle Retrofit click */ }) {
-                    Text("Retrofit", fontSize = 10.sp)
+                TextButton(onClick = { viewModel.setSelectedApiType(ApiType.RETROFIT) }) {
+                    Text("Retrofit", fontSize = 18.sp)
                 }
-                TextButton(onClick = { /* Handle Ktor click */ }) {
-                    Text("Ktor", fontSize = 10.sp)
+                TextButton(onClick = { viewModel.setSelectedApiType(ApiType.KTOR) }) {
+                    Text("Ktor", fontSize = 18.sp)
                 }
             }
         }
@@ -146,59 +142,41 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
 
 @Composable
 fun InvoiceItem(
-    selectionText: String,
-    amount: String,
-    stateText: String,
-    euroSign: String = "€"
+selectionText: String,
+amount: String,
+stateText: String,
+euroSign: String = "€"
 ) {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        val (tvSelection, tvAmount, tvEuro, tvState, ivArrow) = createRefs()
+   Box(modifier = Modifier
+       .fillMaxWidth()
+       .height(100.dp)
+   ) {
+       Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+           Column (
+               modifier = Modifier.padding(8.dp)
+           ) {
+               Text(text = selectionText, fontSize = 24.sp)
+               Spacer(modifier = Modifier.height(10.dp))
+               Text(text = stateText, fontSize = 24.sp)
+           }
 
-        Text(
-            text = selectionText,
-            fontSize = 28.sp,
-            modifier = Modifier.constrainAs(tvSelection) {
-                top.linkTo(parent.top)
-                bottom.linkTo(tvState.top)
-                start.linkTo(parent.start)
-                end.linkTo(tvAmount.start)
-            }
-        )
+           Column (modifier = Modifier
+               .fillMaxWidth()
+               .padding(end = 8.dp), horizontalAlignment = Alignment.End){
+               Row(verticalAlignment = Alignment.CenterVertically) {
+                   Text(text = amount, fontSize = 24.sp, modifier = Modifier.padding(end = 4.dp))
+                   Text(text = euroSign, fontSize = 24.sp)
+                   Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Information about invoice")
+               }
 
-        Text(
-            text = amount,
-            fontSize = 34.sp,
-            modifier = Modifier.constrainAs(tvAmount) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(tvSelection.end)
-                end.linkTo(tvEuro.start)
-            }
-        )
-
-        Text(
-            text = euroSign,
-            fontSize = 34.sp,
-            modifier = Modifier.constrainAs(tvEuro) {
-                baseline.linkTo(tvAmount.baseline)
-                end.linkTo(ivArrow.start, margin = 8.dp)
-            }
-        )
-
-        Text(
-            text = stateText,
-            fontSize = 24.sp,
-            modifier = Modifier.constrainAs(tvState) {
-                bottom.linkTo(parent.bottom, margin = 4.dp)
-                start.linkTo(tvSelection.start)
-                end.linkTo(parent.end)
-            }
-        )
-    }
+           }
+       }
+       Divider(
+           modifier = Modifier
+               .fillMaxWidth()
+               .padding(vertical = 5.dp)
+       )
+   }
 }
 
 @Composable
