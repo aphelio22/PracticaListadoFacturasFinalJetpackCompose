@@ -1,4 +1,5 @@
 package com.example.practicalistadofacturasfinaljetpackcompose.ui.screen
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -96,8 +98,9 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
                     // Render each item
                     InvoiceItem(
                         selectionText = item.fecha,
-                       amount = item.importeOrdenacion.toString(),
-                       stateText = item.descEstado
+                        amount = item.importeOrdenacion.toString(),
+                        stateText = item.descEstado,
+                        viewModel = viewModel
                     )
                 }
             }
@@ -142,41 +145,58 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
 
 @Composable
 fun InvoiceItem(
-selectionText: String,
-amount: String,
-stateText: String,
-euroSign: String = "€"
+    selectionText: String,
+    amount: String,
+    stateText: String,
+    euroSign: String = "€",
+    viewModel: InvoiceActivityViewModel
 ) {
-   Box(modifier = Modifier
-       .fillMaxWidth()
-       .height(100.dp)
-   ) {
-       Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
-           Column (
-               modifier = Modifier.padding(8.dp)
-           ) {
-               Text(text = selectionText, fontSize = 24.sp)
-               Spacer(modifier = Modifier.height(10.dp))
-               Text(text = stateText, fontSize = 24.sp)
-           }
 
-           Column (modifier = Modifier
-               .fillMaxWidth()
-               .padding(end = 8.dp), horizontalAlignment = Alignment.End){
-               Row(verticalAlignment = Alignment.CenterVertically) {
-                   Text(text = amount, fontSize = 24.sp, modifier = Modifier.padding(end = 4.dp))
-                   Text(text = euroSign, fontSize = 24.sp)
-                   Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Information about invoice")
-               }
+    val formattedDate = viewModel.formatDate(selectionText)
 
-           }
-       }
-       Divider(
-           modifier = Modifier
-               .fillMaxWidth()
-               .padding(vertical = 5.dp)
-       )
-   }
+    val stateColor = when (stateText) {
+        "Pendiente de pago" -> Color.Red
+        else -> Color.Gray
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = formattedDate, fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(10.dp))
+                if (stateText != "Pagada") {
+                    Text(text = stateText, fontSize = 24.sp, color = stateColor)
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 8.dp), horizontalAlignment = Alignment.End
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = amount, fontSize = 24.sp, modifier = Modifier.padding(end = 4.dp))
+                    Text(text = euroSign, fontSize = 24.sp)
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "Information about invoice"
+                    )
+                }
+
+            }
+        }
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp)
+        )
+    }
 }
 
 @Composable

@@ -49,7 +49,6 @@ class InvoiceActivityViewModel @Inject constructor(private val appRepository: Ap
     private var selectedApiType = ApiType.RETROMOCK
 
     init {
-        setSelectedApiType(ApiType.RETROFIT)
         fetchInvoices()
         fetchRemoteConfig()
     }
@@ -230,5 +229,18 @@ class InvoiceActivityViewModel @Inject constructor(private val appRepository: Ap
             }
         }
         return filteredInvoicesBalanceBar
+    }
+
+     fun formatDate(date: String): String {
+        return try {
+            val insert = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val format = insert.parse(date)
+            val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale("es", "ES"))
+
+            format?.let { outputFormat.format(it) } ?: date
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            date
+        }
     }
 }
