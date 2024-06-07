@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "887607320635",
+    "project_id": "practicalistadofacturasjetpack",
+    "storage_bucket": "practicalistadofacturasjetpack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887607320635:android:72f907669cec2b51a17c1e",
+        "android_client_info": {
+          "package_name": "com.example.practicalistadofacturasfinaljetpackcompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4rdoPT039yOgIMYfULpkCwra4FCCWa5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
