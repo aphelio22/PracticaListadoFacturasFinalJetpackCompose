@@ -1,6 +1,5 @@
 package com.example.practicalistadofacturasfinaljetpackcompose.ui.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +14,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -34,18 +32,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavHostController
 import com.example.practicalistadofacturasfinaljetpackcompose.R
 import com.example.practicalistadofacturasfinaljetpackcompose.enums.ApiType
 import com.example.practicalistadofacturasfinaljetpackcompose.ui.viewmodel.InvoiceActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) {
+fun InvoicesListScreen(viewModel: InvoiceActivityViewModel, navigationController: NavHostController) {
     val invoices by viewModel.filteredInvoicesLiveData.observeAsState(emptyList())
 
     Scaffold(
@@ -53,12 +51,14 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
             TopAppBar(
                 title = { Text("Atrás") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation icon press */ }) {
+                    IconButton(onClick = { navigationController.navigateUp() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    // Add any additional actions here, e.g., menu icons
+                    IconButton(onClick = { navigationController.navigate("FilersScreen") }) {
+                        Icon(Icons.Default.List, contentDescription = "Filter")
+                    }
                 }
             )
         }
@@ -68,7 +68,7 @@ fun InvoicesListScreen(modifier: Modifier, viewModel: InvoiceActivityViewModel) 
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            val (tvInvoiceTitle, rvInvoices, tvEmptyList, switchRetromock, toggleRetroKtor) = createRefs()
+            val (tvInvoiceTitle, rvInvoices, tvEmptyList, toggleRetroKtor) = createRefs()
 
             Text(
                 text = stringResource(id = R.string.invoiceTitle),

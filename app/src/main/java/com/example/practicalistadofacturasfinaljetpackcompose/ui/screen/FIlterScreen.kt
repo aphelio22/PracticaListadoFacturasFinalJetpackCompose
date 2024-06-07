@@ -31,14 +31,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.practicalistadofacturasfinaljetpackcompose.ui.theme.PracticaListadoFacturasFinalJetpackComposeTheme
+import com.example.practicalistadofacturasfinaljetpackcompose.ui.viewmodel.InvoiceActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvoicesFiltersScreen(
-    modifier: Modifier = Modifier,
     onApplyFiltersClick: () -> Unit,
-    onRestoreFiltersClick: () -> Unit
+    onRestoreFiltersClick: () -> Unit,
+    viewModel: InvoiceActivityViewModel,
+    navController: NavController
 ) {
     val scrollState = rememberScrollState()
 
@@ -180,16 +183,5 @@ fun FilterCheckBox(text: String) {
     ) {
         Checkbox(checked = false, onCheckedChange = { /* TODO: Handle checkbox change */ })
         Text(text = text, fontSize = 20.sp)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InvoicesFiltersScreenPreview() {
-    PracticaListadoFacturasFinalJetpackComposeTheme {
-        InvoicesFiltersScreen(
-            onApplyFiltersClick = {},
-            onRestoreFiltersClick = {}
-        )
     }
 }

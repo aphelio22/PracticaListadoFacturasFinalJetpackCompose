@@ -101,4 +101,5 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.navigation.compose)
 }
