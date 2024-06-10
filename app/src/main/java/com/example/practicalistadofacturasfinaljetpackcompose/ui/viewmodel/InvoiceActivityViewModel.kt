@@ -48,9 +48,21 @@ class InvoiceActivityViewModel @Inject constructor(private val appRepository: Ap
 
     private var selectedApiType = ApiType.RETROMOCK
 
+    private val _filterCheckBoxSate = MutableLiveData<Map<String, Boolean>>()
+    val filterCheckBoxState: LiveData<Map<String, Boolean>>
+        get() = _filterCheckBoxSate
+
     init {
         fetchInvoices()
         fetchRemoteConfig()
+        _filterCheckBoxSate.value = mapOf(
+            "Pagada" to false,
+            "Pendiente de pago" to false,
+            "Anuladas" to false,
+            "Cuota fija" to false,
+            "planPago" to false
+        )
+
     }
 
     private fun fetchRemoteConfig() {
@@ -242,5 +254,11 @@ class InvoiceActivityViewModel @Inject constructor(private val appRepository: Ap
             e.printStackTrace()
             date
         }
+    }
+
+    fun onFilterChange(filter: String, isChecked: Boolean) {
+        val currentFilters = _filterCheckBoxSate.value?.toMutableMap() ?: mutableMapOf()
+        currentFilters[filter] = isChecked
+        _filterCheckBoxSate.value = currentFilters
     }
 }

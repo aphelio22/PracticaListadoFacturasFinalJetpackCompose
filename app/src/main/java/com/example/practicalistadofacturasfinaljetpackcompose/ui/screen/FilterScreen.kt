@@ -28,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +59,7 @@ fun InvoicesFiltersScreen(
     var endDate by remember { mutableStateOf("") }
 
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val filterState by viewModel.filterCheckBoxState.observeAsState(emptyMap())
 
     Scaffold(
         topBar = {
@@ -140,27 +142,21 @@ fun InvoicesFiltersScreen(
                 Text(text = "", fontSize = 20.sp)
             }
 
-            Slider(
-                value = 0.5f,
-                onValueChange = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-            )
-
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 20.dp)
-            )
+            AmountSlider(viewModel)
 
             SectionTitle(text = "Por Estado")
 
-            FilterCheckBox(text = "Pagadas")
-            FilterCheckBox(text = "Anuladas")
-            FilterCheckBox(text = "Pendientes de pago")
-            FilterCheckBox(text = "Cuota fija")
-            FilterCheckBox(text = "dd")
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                filterState.forEach { (filter, isChecked) ->
+                    FilterCheckBox(
+                        text = filter,
+                        isChecked = isChecked,
+                        onCheckedChange = { checked ->
+                            viewModel.onFilterChange(filter, checked)
+                        }
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -231,7 +227,6 @@ fun FilterButton(
             month,
             day
         )
-
         dateConstraints(datePickerDialog)
         datePickerDialog.show()
     }
@@ -245,12 +240,42 @@ fun FilterButton(
 }
 
 @Composable
-fun FilterCheckBox(text: String) {
+fun FilterCheckBox(text: String, isChecked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier.padding(start = 16.dp, top = 7.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = false, onCheckedChange = { /* TODO: Handle checkbox change */ })
+        Checkbox(checked = isChecked, onCheckedChange = onCheckedChange)
         Text(text = text, fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun AmountSlider(viewModel: InvoiceActivityViewModel) {
+    val maxAmount by viewModel.maxAmount.observeAsState(0f)
+    val sliderValue = remember { mutableStateOf(maxAmount) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = "0", fontSize = 20.sp)
+            Text(text = sliderValue.value.toInt().toString(), fontSize = 20.sp)
+            Text(text = maxAmount.toInt().toString(), fontSize = 20.sp)
+        }
+
+        Slider(
+            value = sliderValue.value,
+            onValueChange = { value ->
+                sliderValue.value = value
+            },
+            valueRange = 0f..maxAmount,
+            steps = maxAmount.toInt() - 1,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
     }
 }
