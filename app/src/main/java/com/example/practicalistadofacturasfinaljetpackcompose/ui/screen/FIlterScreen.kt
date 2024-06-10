@@ -1,5 +1,7 @@
 package com.example.practicalistadofacturasfinaljetpackcompose.ui.screen
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
@@ -25,15 +27,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.practicalistadofacturasfinaljetpackcompose.ui.theme.PracticaListadoFacturasFinalJetpackComposeTheme
+import androidx.navigation.NavHostController
+import com.example.practicalistadofacturasfinaljetpackcompose.R
 import com.example.practicalistadofacturasfinaljetpackcompose.ui.viewmodel.InvoiceActivityViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,17 +52,21 @@ fun InvoicesFiltersScreen(
     onApplyFiltersClick: () -> Unit,
     onRestoreFiltersClick: () -> Unit,
     viewModel: InvoiceActivityViewModel,
-    navController: NavController
+    navigationCOntroller: NavHostController
 ) {
     val scrollState = rememberScrollState()
+    var startDate by remember { mutableStateOf("") }
+    var endDate by remember { mutableStateOf("") }
+
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Filtrar Facturas") },
                 actions = {
-                    IconButton(onClick = { /* TODO: Handle menu actions */ }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
+                    IconButton(onClick = { navigationCOntroller.popBackStack() }) {
+                        Icon(Icons.Default.Close, contentDescription = "Close Filter")
                     }
                 }
             )
@@ -65,26 +80,56 @@ fun InvoicesFiltersScreen(
         ) {
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Issue Date Section
             SectionTitle(text = "Por fecha")
 
-            Row{
+            Row {
                 Column {
-                    SubTitle(text = "Desde")
-                    FilterButton(text = "")
+                    SubTitle(text = stringResource(R.string.sinceTitle))
+                    FilterButton(
+                        label = stringResource(R.string.dayMonthYear),
+                        selectedDate = startDate,
+                        onDateSelected = { newDate ->
+                            if (endDate.isNotEmpty() && dateFormat.parse(newDate)
+                                    ?.after(dateFormat.parse(endDate)) == true
+                            ) {
+                                endDate = ""
+                            }
+                            startDate = newDate
+                        },
+                        dateConstraints = { dialog ->
+                            if (endDate.isNotEmpty()) {
+                                dialog.datePicker.maxDate = dateFormat.parse(endDate)?.time ?: 0L
+                            }
+                        }
+                    )
                 }
                 Column {
-                    SubTitle(text = "Hasta")
-                    FilterButton(text = "")
+                    SubTitle(text = stringResource(R.string.untilTitle))
+                    FilterButton(label = stringResource(R.string.dayMonthYear),
+                        selectedDate = endDate,
+                        onDateSelected = { newDate ->
+                            if (startDate.isNotEmpty() && dateFormat.parse(newDate)
+                                    ?.before(dateFormat.parse(startDate)) == true
+                            ) {
+                                startDate = ""
+                            }
+                            endDate = newDate
+                        },
+                        dateConstraints = { dialog ->
+                            if (startDate.isNotEmpty()) {
+                                dialog.datePicker.minDate = dateFormat.parse(startDate)?.time ?: 0L
+                            }
+                        }
+                    )
                 }
             }
+
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
             )
 
-            // Amount Section
             SectionTitle(text = "Por importe")
 
             Row(
@@ -110,7 +155,6 @@ fun InvoicesFiltersScreen(
                     .padding(vertical = 20.dp)
             )
 
-            // State Section
             SectionTitle(text = "Por Estado")
 
             FilterCheckBox(text = "Pagadas")
@@ -121,7 +165,6 @@ fun InvoicesFiltersScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Buttons
             Button(
                 onClick = onApplyFiltersClick,
                 modifier = Modifier
@@ -165,13 +208,40 @@ fun SubTitle(text: String) {
 }
 
 @Composable
-fun FilterButton(text: String) {
+fun FilterButton(
+    label: String,
+    selectedDate: String,
+    onDateSelected: (String) -> Unit,
+    dateConstraints: (DatePickerDialog) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            LocalContext.current,
+            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                onDateSelected("$selectedDay/${selectedMonth + 1}/$selectedYear")
+                showDialog = false
+            },
+            year,
+            month,
+            day
+        )
+
+        dateConstraints(datePickerDialog)
+        datePickerDialog.show()
+    }
+
     Button(
-        onClick = { /* TODO: Handle button click */ },
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
+        onClick = { showDialog = true },
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        Text(text = text, fontSize = 20.sp)
+        Text(text = if (selectedDate.isEmpty()) label else selectedDate, fontSize = 20.sp)
     }
 }
 

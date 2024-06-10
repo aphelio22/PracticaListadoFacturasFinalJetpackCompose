@@ -1,6 +1,8 @@
 
-rkotlin:S1172+"(Remove these unused function parameters.(Ùå»«øÿÿÿÿ8ãÇ”•ÿ1J$6f5fb2c7-3c86-4275-a4cd-500da0adcf4d
-vkotlin:S11355"2Complete the task associated to this TODO comment.(îƒ×'8º«Âş1J$9cd87286-1020-470e-bf51-01b4428af0e9
-}kotlin:S1135ª"2Complete the task associated to this TODO comment.(ñü…›üÿÿÿÿ8»«Âş1J$04983277-f509-48db-a21e-c9833750d9b5
-}kotlin:S1135¸"2Complete the task associated to this TODO comment.(ÂôÃèüÿÿÿÿ8»«Âş1J$cb17a7de-3765-420a-9f77-68aea3b393a3
-_kotlin:S1128"Remove this unused import.(®©Ô”8¬À—•ÿ1J$f1fa2b18-df14-4df5-a5b1-36565f022e44
+|kotlin:S11726"2Remove this unused function parameter "viewModel".(Ùå»«øÿÿÿÿ8£úòˆ€2J$0a85789f-c6e5-452b-ac1f-d9854532d5e4
+}kotlin:S1135ş"2Complete the task associated to this TODO comment.(ÂôÃèüÿÿÿÿ8°úòˆ€2J$813fa754-b39d-41f8-9729-ac7f339fce29
+_kotlin:S1128)"Remove this unused import.(³¹¦–8µúòˆ€2J$675290ad-2773-4c77-b07b-28e5da8de8d9
+œkotlin:S37763"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(şØ‚©şÿÿÿÿ8¹úòˆ€2J$ed7a3de3-a4c9-4094-99b7-3e173402d257
+wkotlin:S6518İ",Replace function call with indexed accessor.(áğÔûÿÿÿÿ8¿úòˆ€2J$1d040c71-0edc-406b-8403-3cff00a56720
+wkotlin:S6518Ş",Replace function call with indexed accessor.(€íÙóüÿÿÿÿ8¿úòˆ€2J$29f4018e-bc5c-448d-a51a-f8485c07cd9e
+wkotlin:S6518ß",Replace function call with indexed accessor.(öÀ¨ƒüÿÿÿÿ8¿úòˆ€2J$f8d8d650-7c3c-4ad2-bb3e-59f98edcaae2

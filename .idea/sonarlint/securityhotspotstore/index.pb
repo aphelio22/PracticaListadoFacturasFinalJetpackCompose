@@ -59,5 +59,3 @@ O
 app/InvoiceActivityViewModel.kt,a\d\adb48c9d5f9e4e502e26e2dbcacd20385325150a
 H
 app/google-services.json,f\d\fd8d34b142d02ec743a8efefefd2c097961666e9
-ê
-`app/src/main/java/com/example/practicalistadofacturasfinaljetpackcompose/ui/screen/Navigation.kt,b\f\bf92ebbf157360bf36f7b193b2f8d564f0cfa5d0
